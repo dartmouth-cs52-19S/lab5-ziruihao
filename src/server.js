@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import path from 'path';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
 
 import apiRouter from './router';
 
@@ -41,5 +42,11 @@ app.use('/api', apiRouter);
 // =============================================================================
 const port = process.env.PORT || 9090;
 app.listen(port);
+
+// DB Setup
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/crud';
+mongoose.connect(mongoURI);
+// set mongoose promises to es6 default
+mongoose.Promise = global.Promise;
 
 console.log(`listening on: ${port}`);
