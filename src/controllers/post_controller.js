@@ -37,7 +37,7 @@ export const getPosts = (req, res) => {
  * @param {*} res
  */
 export const getPost = (req, res) => {
-  Post.find({ _id: req.params.id }).then((result) => {
+  Post.findById(req.params.id).then((result) => {
     res.json(result);
   }).catch((error) => {
     res.status(404).json({ error });
@@ -63,7 +63,7 @@ export const deletePost = (req, res) => {
  * @param {*} res
  */
 export const updatePost = (req, res) => {
-  Post.findOne({ _id: req.params.id }).then((post) => {
+  Post.findById(req.params.id).then((post) => {
     post.title = (req.body.title === null ? post.title : req.body.title);
     post.content = (req.body.content === null ? post.content : req.body.content);
     post.tags = (req.body.tags === null ? post.tags : req.body.tags);
