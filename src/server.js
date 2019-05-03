@@ -4,6 +4,8 @@ import cors from 'cors';
 import path from 'path';
 import morgan from 'morgan';
 
+import apiRouter from './router';
+
 // initialize
 const app = express();
 
@@ -32,6 +34,8 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
   res.send('hi');
 });
+
+app.use('/api', apiRouter);
 
 // START THE SERVER
 // =============================================================================
