@@ -7,6 +7,7 @@ import Post from '../models/post_model';
  */
 export const createPost = (req, res) => {
   const post = new Post();
+  post.author = req.body.author;
   post.title = req.body.title;
   post.content = req.body.content;
   post.tags = req.body.tags;

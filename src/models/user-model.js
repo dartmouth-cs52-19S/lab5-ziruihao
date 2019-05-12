@@ -18,11 +18,12 @@ const UserSchema = new Schema({
 
 UserSchema.methods.comparePassword = function comparePassword(candidatePassword, callback) {
   const user = this;
-  bcrypt.compare(candidatePassword, user.password, (error, result) => {
+  // this an inline function
+  bcrypt.compare(candidatePassword, user.password, (error, isMatch) => {
     if (error) {
       return callback(error);
     } else {
-      return callback(null, result);
+      return callback(null, isMatch);
     }
   });
 };
