@@ -14,19 +14,17 @@ const jwtOptions = {
 
 const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
   User.findOne({ email }, (err, user) => {
-    if (err) { done(err); }
-
-    if (!user) { done(null, false); }
-
-    user.comparePassword(password, (err, isMatch) => {
-      if (err) {
-        done(err);
-      } else if (!isMatch) {
-        done(null, false);
-      } else {
-        done(null, user);
-      }
-    });
+    if (err) { done(err); } else if (!user) { done(null, false); } else {
+      user.comparePassword(password, (err, isMatch) => {
+        if (err) {
+          done(err);
+        } else if (!isMatch) {
+          done(null, false);
+        } else {
+          done(null, user);
+        }
+      });
+    }
   });
 });
 

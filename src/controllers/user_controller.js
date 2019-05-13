@@ -13,7 +13,6 @@ function tokenForUser(user) {
 
 export const signin = (req, res, next) => {
   // what is next for?
-  console.log(req.user);
   User.findOne({ email: req.body.email }).then((result) => {
     const token = tokenForUser(req.user);
     res.send({

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Post from '../models/post_model';
 
 /**
@@ -26,7 +27,7 @@ export const createPost = (req, res) => {
  * @param {*} res
  */
 export const getPosts = (req, res) => {
-  Post.find().then((result) => {
+  Post.find().populate('author').then((result) => {
     res.json(result);
   }).catch((error) => {
     res.status(404).json({ error });
@@ -39,6 +40,7 @@ export const getPosts = (req, res) => {
  * @param {*} res
  */
 export const getPost = (req, res) => {
+  console.log(req.params.id);
   Post.findById(req.params.id).populate('author').then((result) => {
     res.json(result);
   }).catch((error) => {
@@ -65,17 +67,22 @@ export const deletePost = (req, res) => {
  * @param {*} res
  */
 export const updatePost = (req, res) => {
+  console.log(req.params.id);
   Post.findById(req.params.id).then((post) => {
     post.title = (req.body.title === null ? post.title : req.body.title);
     post.content = (req.body.content === null ? post.content : req.body.content);
     post.tags = (req.body.tags === null ? post.tags : req.body.tags);
     post.cover_url = (req.body.cover_url === null ? post.cover_url : req.body.cover_url);
-    post.save().then((result) => {
-      res.json(result);
-    }).catch((error) => {
-      res.status(500).json({ error });
+    console.log(post.content);
+    post.save().then(() => {
+      Post.findById(req.params.id).populate('author').then((result) => {
+        res.json(result);
+      }).catch((error) => {
+        res.status(500).json({ error });
+      });
     });
   }).catch((error) => {
+    console.log('ERROR HERE');
     res.status(404).json({ error });
   });
 };
