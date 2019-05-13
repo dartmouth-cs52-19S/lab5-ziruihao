@@ -7,7 +7,8 @@ import Post from '../models/post_model';
  */
 export const createPost = (req, res) => {
   const post = new Post();
-  post.author = req.body.author;
+  console.log(req.user);
+  post.author = req.user;
   post.title = req.body.title;
   post.content = req.body.content;
   post.tags = req.body.tags;
@@ -38,7 +39,7 @@ export const getPosts = (req, res) => {
  * @param {*} res
  */
 export const getPost = (req, res) => {
-  Post.findById(req.params.id).then((result) => {
+  Post.findById(req.params.id).populate('author').then((result) => {
     res.json(result);
   }).catch((error) => {
     res.status(404).json({ error });

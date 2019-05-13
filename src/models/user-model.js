@@ -9,6 +9,7 @@ const UserSchema = new Schema({
     first: String,
     last: String,
   },
+  initials: String,
   imageURL: String,
 }, {
   toJSON: {
@@ -18,7 +19,7 @@ const UserSchema = new Schema({
 
 UserSchema.methods.comparePassword = function comparePassword(candidatePassword, callback) {
   const user = this;
-  // this an inline function
+  // difference between return callback() versus just callback()?
   bcrypt.compare(candidatePassword, user.password, (error, isMatch) => {
     if (error) {
       return callback(error);
@@ -29,8 +30,6 @@ UserSchema.methods.comparePassword = function comparePassword(candidatePassword,
 };
 
 UserSchema.pre('save', function beforeUserSave(next) {
-  // this is a reference to our model
-  // the function runs in some other context so DO NOT bind it
   const user = this;
   if (user.isModified('password')) {
     const salt = bcrypt.genSaltSync(10);
@@ -38,11 +37,9 @@ UserSchema.pre('save', function beforeUserSave(next) {
     user.password = hash;
   }
   return next();
-  // when done run the **next** callback with no arguments
-  // call next with an error if you encounter one
-  // return next();
+  // what's the difference between calling next with no arguments and just returning it?
 });
 
-const UserModel = mongoose.model('Post', UserSchema);
+const UserModel = mongoose.model('User', UserSchema);
 
 export default UserModel;

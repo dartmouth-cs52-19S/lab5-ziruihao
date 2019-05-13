@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import jwt from 'jwt-simple';
 import dotenv from 'dotenv';
 import User from '../models/user-model';
@@ -11,25 +12,43 @@ function tokenForUser(user) {
 }
 
 export const signin = (req, res, next) => {
-  res.send({ token: tokenForUser(req.user) });
+  // what is next for?
+  console.log(req.user);
+  User.findOne({ email: req.body.email }).then((result) => {
+    const token = tokenForUser(req.user);
+    res.send({
+      user: result,
+      token,
+    });
+  });
 };
 
 export const signup = (req, res, next) => {
+  // what is next for?
   const { email } = req.body;
   const { password } = req.body;
-
   if (!email || !password) {
-    return res.status(422).send('You must provide email and password');
-  } else if (User.find({ email }) !== null) {
-    return res.status(409).send('Email already taken.');
+    res.status(422).send('You must provide email and password');
   } else {
-    const user = new User();
-    user.email = email;
-    user.password = password;
-    user.save().then(() => {
-      res.send({ token: tokenForUser(req.user) });
-    }).catch((error) => {
-      res.send(error);
+    User.find({ email }).then((result) => {
+      if (result.length !== 0) {
+        res.status(409).send('Email already taken.');
+      } else {
+        const user = new User();
+        user.email = email;
+        user.password = password;
+        user.name = req.body.name;
+        user.initials = req.body.initials;
+        user.imageURL = req.body.imageURL;
+        user.save().then((result2) => {
+          res.send({
+            user: result2,
+            token: tokenForUser(user),
+          });
+        }).catch((error) => {
+          res.send(error);
+        });
+      }
     });
   }
 };
